@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\Enums\DniTypeEnum;
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
@@ -23,26 +24,94 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required(),
-                Forms\Components\TextInput::make('email')
-                    ->email()
-                    ->required(),
-                Forms\Components\DateTimePicker::make('email_verified_at'),
-                Forms\Components\TextInput::make('password')
-                    ->password()
-                    ->required(),
-                Forms\Components\TextInput::make('last_name'),
-                Forms\Components\TextInput::make('cellphone')
-                    ->tel(),
-                Forms\Components\TextInput::make('dni_type'),
-                Forms\Components\TextInput::make('dni'),
-                Forms\Components\TextInput::make('active')
-                    ->required()
-                    ->numeric()
-                    ->default(1),
-                Forms\Components\TextInput::make('visits_per_day')
-                    ->numeric(),
+                // Personal Information - Main Section
+                Forms\Components\Section::make('Personal Information')
+                    ->description('Main user data')
+                    ->schema([
+                        Forms\Components\Grid::make(2)
+                            ->schema([
+                                Forms\Components\TextInput::make('name')
+                                    ->label(__('Name'))
+                                    ->required()
+                                    ->placeholder(__('Enter name')),
+                                Forms\Components\TextInput::make('last_name')
+                                    ->label(__('Last Name'))
+                                    ->placeholder(__('Enter last name')),
+                            ]),
+
+                        Forms\Components\Grid::make(2)
+                            ->schema([
+                                Forms\Components\Select::make('dni_type')
+                                    ->label(__('ID Type'))
+                                    ->options([
+                                        'CC' => 'CC - Identification Card',
+                                        'TI' => 'TI - Juvenile Identity Card',
+                                    ])
+                                    ->default('CC')
+                                    ->searchable()
+                                    ->required(),
+                                Forms\Components\TextInput::make('dni')
+                                    ->label(__('DNI'))
+                                    ->placeholder(__('ID Number'))
+                                    ->required()
+                                    ->unique(ignoreRecord: true)
+                                    ->numeric()
+                                    ->maxLength(20),
+                            ]),
+                    ]),
+
+                // Contact Information
+                Forms\Components\Section::make('Contact Information')
+                    ->description('Communication details')
+                    ->collapsible()
+                    ->schema([
+                        Forms\Components\Grid::make(2)
+                            ->schema([
+                                Forms\Components\TextInput::make('email')
+                                    ->label(__('Email'))
+                                    ->placeholder(__('example@domain'))
+                                    ->email()
+                                    ->required()
+                                    ->unique(ignoreRecord: true)
+                                    ->maxLength(70),
+                                Forms\Components\TextInput::make('cellphone')
+                                    ->label(__('Phone Number'))
+                                    ->tel()
+                                    ->prefix('+')
+                                    ->required()
+                                    ->maxLength(20)
+                                    ->placeholder('1 (555) 123-4567'),
+                            ]),
+                    ]),
+
+                // Account Settings
+                Forms\Components\Section::make('Account Settings')
+                    ->description('Access settings and preferences')
+                    ->schema([
+                        Forms\Components\Toggle::make('active')
+                            ->label(__('Active User'))
+                            ->required()
+                            ->default(true),
+                        Forms\Components\Grid::make(2)
+                            ->schema([
+                                Forms\Components\TextInput::make('password')
+                                    ->label(__('Password'))
+                                    ->password()
+                                    ->revealable()
+                                    ->required(function (string $operation): bool {
+                                        return $operation === 'create';
+                                    })
+                                    ->dehydrated(fn($state) => filled($state))
+                                    ->minLength(8)
+                                    ->helperText(__('Minimum 8 characters')),
+                                Forms\Components\TextInput::make('visits_per_day')
+                                    ->label(__('Visits Per Day'))
+                                    ->numeric()
+                                    ->minValue(0)
+                                    ->maxValue(10)
+                                    ->suffix(__('visits')),
+                            ]),
+                    ]),
             ]);
     }
 
