@@ -2,17 +2,17 @@
 
 namespace App\Filament\Resources;
 
-use App\Enums\Enums\DniTypeEnum;
-use App\Filament\Resources\UserResource\Pages;
-use App\Filament\Resources\UserResource\RelationManagers;
-use App\Models\User;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use App\Models\User;
 use Filament\Tables;
+use Filament\Forms\Form;
+use App\Enums\DniTypeEnum;
 use Filament\Tables\Table;
+use Filament\Resources\Resource;
 use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Resources\UserResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\UserResource\RelationManagers;
 
 class UserResource extends Resource
 {
@@ -43,11 +43,8 @@ class UserResource extends Resource
                             ->schema([
                                 Forms\Components\Select::make('dni_type')
                                     ->label(__('ID Type'))
-                                    ->options([
-                                        'CC' => 'CC - Identification Card',
-                                        'TI' => 'TI - Juvenile Identity Card',
-                                    ])
-                                    ->default('CC')
+                                    ->options(DniTypeEnum::keyValuesCombined())
+                                    ->default(DniTypeEnum::CC->value)
                                     ->searchable()
                                     ->required(),
                                 Forms\Components\TextInput::make('dni')
@@ -80,7 +77,7 @@ class UserResource extends Resource
                                     ->prefix('+')
                                     ->required()
                                     ->maxLength(20)
-                                    ->placeholder('1 (555) 123-4567'),
+                                    ->placeholder('1 555 123-4567'),
                             ]),
                     ]),
 
