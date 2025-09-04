@@ -116,35 +116,67 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
+                Tables\Columns\TextColumn::make('full_name')
+                    ->label(__('Full Name'))
+                    ->searchable(['name', 'last_name'])
+                    ->sortable()
+                    ->toggleable(),
+
                 Tables\Columns\TextColumn::make('email')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('email_verified_at')
-                    ->dateTime()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+                    ->label(__('Email Address'))
+                    ->searchable()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('last_name')
-                    ->searchable(),
+                    ->toggleable()
+                    ->icon('heroicon-o-envelope')
+                    ->copyable()
+                    ->copyMessage(__('Copied!'))
+                    ->copyMessageDuration(1500),
+
                 Tables\Columns\TextColumn::make('cellphone')
-                    ->searchable(),
+                    ->label(__('Cellphone'))
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable()
+                    ->icon('heroicon-o-phone')
+                    ->copyable()
+                    ->copyMessage(__('Copied!'))
+                    ->copyMessageDuration(1500),
+
                 Tables\Columns\TextColumn::make('dni_type')
-                    ->searchable(),
+                    ->label(__('ID Type'))
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable()
+                    ->badge(),
+
                 Tables\Columns\TextColumn::make('dni')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('active')
-                    ->numeric()
-                    ->sortable(),
+                    ->label(__('ID Number'))
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable()
+                    ->icon('heroicon-o-identification')
+                    ->copyable()
+                    ->copyMessage(__('Copied!'))
+                    ->copyMessageDuration(1500),
+
                 Tables\Columns\TextColumn::make('visits_per_day')
                     ->numeric()
                     ->sortable(),
+
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label(__('Created At'))
+                    ->searchable()
+                    ->sortable()
+                    ->date('Y-m-d')
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->label(__('Updated At'))
+                    ->searchable()
+                    ->sortable()
+                    ->since()
+                    ->dateTimeTooltip()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
