@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\UserResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\UserResource\RelationManagers;
+use App\Helpers\Filament\CommonColumns;
 
 class UserResource extends Resource
 {
@@ -116,67 +117,26 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('full_name')
-                    ->label(__('Full Name'))
-                    ->searchable(['name', 'last_name'])
-                    ->sortable()
-                    ->toggleable(),
+                CommonColumns::baseTextColumn(fieldName: 'full_name', label: 'Full Name')
+                    ->searchable(['name', 'last_name']),
 
-                Tables\Columns\TextColumn::make('email')
-                    ->label(__('Email Address'))
-                    ->searchable()
-                    ->sortable()
-                    ->toggleable()
-                    ->icon('heroicon-o-envelope')
-                    ->copyable()
-                    ->copyMessage(__('Copied!'))
-                    ->copyMessageDuration(1500),
+                CommonColumns::baseIconCopyableTextColumn(fieldName: 'email', label: 'Email Address', iconName: 'heroicon-o-envelope'),
 
-                Tables\Columns\TextColumn::make('cellphone')
-                    ->label(__('Cellphone'))
-                    ->searchable()
-                    ->sortable()
-                    ->toggleable()
-                    ->icon('heroicon-o-phone')
-                    ->copyable()
-                    ->copyMessage(__('Copied!'))
-                    ->copyMessageDuration(1500),
+                CommonColumns::baseIconCopyableTextColumn(fieldName: 'cellphone', label: 'Cellphone', iconName: 'heroicon-o-phone'),
 
-                Tables\Columns\TextColumn::make('dni_type')
-                    ->label(__('ID Type'))
-                    ->searchable()
-                    ->sortable()
-                    ->toggleable()
+                CommonColumns::baseTextColumn(fieldName: 'dni_type', label: 'ID Type')
                     ->badge(),
 
-                Tables\Columns\TextColumn::make('dni')
-                    ->label(__('ID Number'))
-                    ->searchable()
-                    ->sortable()
-                    ->toggleable()
-                    ->icon('heroicon-o-identification')
-                    ->copyable()
-                    ->copyMessage(__('Copied!'))
-                    ->copyMessageDuration(1500),
+                CommonColumns::baseIconCopyableTextColumn(fieldName: 'dni', label: 'ID Number', iconName: 'heroicon-o-identification'),
 
-                Tables\Columns\TextColumn::make('visits_per_day')
-                    ->numeric()
-                    ->sortable(),
+                Tables\Columns\ToggleColumn::make('active'),
 
-                Tables\Columns\TextColumn::make('created_at')
-                    ->label(__('Created At'))
-                    ->searchable()
-                    ->sortable()
-                    ->date('Y-m-d')
-                    ->toggleable(isToggledHiddenByDefault: true),
+                CommonColumns::baseTextColumn(fieldName: 'visits_per_day', label: 'Visits Per Day')
+                    ->numeric(),
 
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->label(__('Updated At'))
-                    ->searchable()
-                    ->sortable()
-                    ->since()
-                    ->dateTimeTooltip()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                CommonColumns::createdAt(label: 'Registered On'),
+
+                CommonColumns::updatedAt(label: 'Last Updated'),
             ])
             ->filters([
                 //
