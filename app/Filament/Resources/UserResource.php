@@ -14,6 +14,7 @@ use App\Filament\Resources\UserResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\UserResource\RelationManagers;
 use App\Helpers\Filament\CommonColumns;
+use App\Helpers\Filament\CommonFormInputs;
 
 class UserResource extends Resource
 {
@@ -42,19 +43,8 @@ class UserResource extends Resource
 
                         Forms\Components\Grid::make(2)
                             ->schema([
-                                Forms\Components\Select::make('dni_type')
-                                    ->label(__('ID Type'))
-                                    ->options(DniTypeEnum::keyValuesCombined())
-                                    ->default(DniTypeEnum::CC->value)
-                                    ->searchable()
-                                    ->required(),
-                                Forms\Components\TextInput::make('dni')
-                                    ->label(__('DNI'))
-                                    ->placeholder(__('ID Number'))
-                                    ->required()
-                                    ->unique(ignoreRecord: true)
-                                    ->numeric()
-                                    ->maxLength(20),
+                                CommonFormInputs::idTypeSelect(fieldName: 'dni_type', label: 'ID Type'),
+                                CommonFormInputs::identificationNumber(fieldName: 'dni', label: 'DNI', placeholder: 'Enter ID number'),
                             ]),
                     ]),
 
@@ -65,20 +55,8 @@ class UserResource extends Resource
                     ->schema([
                         Forms\Components\Grid::make(2)
                             ->schema([
-                                Forms\Components\TextInput::make('email')
-                                    ->label(__('Email'))
-                                    ->placeholder(__('example@domain'))
-                                    ->email()
-                                    ->required()
-                                    ->unique(ignoreRecord: true)
-                                    ->maxLength(70),
-                                Forms\Components\TextInput::make('cellphone')
-                                    ->label(__('Phone Number'))
-                                    ->tel()
-                                    ->prefix('+')
-                                    ->required()
-                                    ->maxLength(20)
-                                    ->placeholder('1 555 123-4567'),
+                                CommonFormInputs::email(fieldName: 'email', label: 'Email', placeholder: 'example@domain'),
+                                CommonFormInputs::phoneNumber(fieldName: 'cellphone', label: 'Phone Number', placeholder: '1 555 123-4567'),
                             ]),
                     ]),
 
