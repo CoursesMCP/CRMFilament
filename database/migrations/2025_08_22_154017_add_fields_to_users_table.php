@@ -1,6 +1,6 @@
 <?php
 
-use App\Enums\Enums\DniTypeEnum;
+use App\Enums\DniTypeEnum;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
