@@ -49,6 +49,7 @@ class CommonFormInputs
             ->tel()
             ->prefix('+')
             ->required()
+            ->unique(ignoreRecord: true)
             ->maxLength(20);
     }
 
