@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use App\Enums\DniTypeEnum;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -65,5 +66,10 @@ class User extends Authenticatable
                 return $this->name . ' ' . $this->last_name;
             },
         );
+    }
+
+    public function organizations(): HasMany
+    {
+        return $this->hasMany(Organization::class);
     }
 }
