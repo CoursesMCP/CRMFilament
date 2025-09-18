@@ -13,12 +13,23 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Helpers\Filament\CommonFormInputs;
+use App\Helpers\Filament\CommonColumns;
 
 class OrganizationResource extends Resource
 {
     protected static ?string $model = Organization::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-building-office-2';
+
+    public static function getNavigationGroup(): string
+    {
+        return __('Clients');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('Organizations');
+    }
 
     public static function form(Form $form): Form
     {
@@ -69,21 +80,33 @@ class OrganizationResource extends Resource
     {
         return $table
             ->columns([
-                //
+                CommonColumns::baseTextColumn(fieldName: 'name', label: 'Name'),
+                CommonColumns::baseIconCopyableTextColumn(fieldName: 'nit', label: 'NIT', iconName: 'heroicon-o-identification'),
+                CommonColumns::baseIconCopyableTextColumn(fieldName: 'cellphone', label: 'Cellphone', iconName: 'heroicon-o-phone'),
+                CommonColumns::baseIconCopyableTextColumn(fieldName: 'phone', label: 'Phone', iconName: 'heroicon-o-phone'),
+                CommonColumns::baseIconCopyableTextColumn(fieldName: 'email', label: 'Email', iconName: 'heroicon-o-envelope'),
+                CommonColumns::baseTextColumn(fieldName: 'user.name', label: 'Assigned to'),
+                CommonColumns::createdAt()
+                    ->label('Registered On'),
+                CommonColumns::updatedAt()
+                    ->label('Last Updated'),
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\ViewAction::make()
+                        ->color('info'),
+                    Tables\Actions\EditAction::make()
+                        ->color('warning'),
+                    Tables\Actions\DeleteAction::make()
+                        ->color('danger')
+                        ->requiresConfirmation(),
+                ])
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\ForceDeleteBulkAction::make(),
-                    Tables\Actions\RestoreBulkAction::make(),
-                ]),
+                Tables\Actions\BulkActionGroup::make([]),
             ]);
     }
 
